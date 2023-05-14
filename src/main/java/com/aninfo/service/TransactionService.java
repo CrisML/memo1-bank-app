@@ -1,16 +1,12 @@
 package com.aninfo.service;
 
-import com.aninfo.exceptions.DepositNegativeSumException;
-import com.aninfo.exceptions.InsufficientFundsException;
-import com.aninfo.exceptions.InvalidTransactionTypeException;
+import com.aninfo.exceptions.*;
 import com.aninfo.model.Account;
-import com.aninfo.repository.AccountRepository;
 import com.aninfo.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.aninfo.model.Transaction;
 
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -24,6 +20,12 @@ public class TransactionService {
     private AccountService accountService;
 
     public Transaction createTransaction(Transaction transaction){
+
+        Optional<Account> account = accountService.findById(transaction.getCbu());
+        if (account.isEmpty()){
+            throw new AccountNotValidException("Invalid Account CBU");
+        }
+
         if(transaction.getCategory().equalsIgnoreCase("withdraw")){
             accountService.withdraw(transaction.getCbu(), transaction.getAmount());
         }else if(transaction.getCategory().equalsIgnoreCase("deposit")){
@@ -43,13 +45,21 @@ public class TransactionService {
     }
 
     public Optional<Transaction>  getTransactionById(Long id) {
-        return transactionRepository.findById(id);
+        Optional<Transaction> transaction = transactionRepository.findById(id);
+        if(transaction.isEmpty()){
+            throw new TransactionNotFoundException("Transaction Not Found");
+        }
+        return transaction;
     }
     public void save(Transaction transaction){
         transactionRepository.save(transaction);
     }
 
     public void deleteById(Long id){
+        Optional<Transaction> transaction = transactionRepository.findById(id);
+        if(transaction.isEmpty()){
+            throw new TransactionNotFoundException("Transaction Not Found");
+        }
         transactionRepository.deleteById(id);
     }
 
