@@ -39,10 +39,10 @@ public class TransactionService {
     }
 
     public Collection<Transaction> getTransactionsByCbu(Long cbu){
-        return (Collection<Transaction>) this.transactionRepository.findTransactionsByCbu(cbu);
+        return this.transactionRepository.findTransactionsByCbu(cbu);
     }
 
-    public Optional<Transaction>  findById(Long id){
+    public Optional<Transaction>  getTransactionById(Long id) {
         return transactionRepository.findById(id);
     }
     public void save(Transaction transaction){
