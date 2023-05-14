@@ -8,15 +8,16 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long transId;
+
+    private String category;
     private Long cbu;
     private Double amount;
-    private String category;
 
-    public void setId(Long id){
+    public void setTransactionId(Long id){
         this.transId = id;
     }
 
-    public Long getId(){
+    public Long getTransactionId(){
         return this.transId;
     }
 

@@ -104,7 +104,7 @@ public class Memo1BankApp {
 	}
 
 	@GetMapping("/transactions/{id}")
-	public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id){
+	public ResponseEntity<Transaction> getTransactionById(@RequestParam Long id){
 		Optional<Transaction> transactionOptional = transactionService.getTransactionById(id);
 		return ResponseEntity.of(transactionOptional);
 	}

@@ -12,6 +12,8 @@ import java.util.List;
 @RepositoryRestResource
 public interface TransactionRepository extends CrudRepository<Transaction, Long> {
 
+
+
     @Override
     List<Transaction> findAll();
 
