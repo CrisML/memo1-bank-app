@@ -14,10 +14,43 @@ import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
+@Service
 public class TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private AccountService accountService;
+
+    public Transaction createTransaction(Transaction transaction){
+        if(transaction.getCategory().equalsIgnoreCase("withdraw")){
+            accountService.withdraw(transaction.getCbu(), transaction.getAmount());
+        }else if(transaction.getCategory().equalsIgnoreCase("deposit")){
+            accountService.deposit(transaction.getCbu(), transaction.getAmount());
+        }else{
+            throw new InvalidTransactionTypeException("Transaction type is invalid");
+        }
+        return transactionRepository.save(transaction);
+    }
+
+    public Collection<Transaction> getTransactions(){
+        return this.transactionRepository.findAll();
+    }
+
+    public Collection<Transaction> getTransactionsByCbu(Long cbu){
+        return (Collection<Transaction>) this.transactionRepository.findTransactionsByCbu(cbu);
+    }
+
+    public Optional<Transaction>  findById(Long id){
+        return transactionRepository.findById(id);
+    }
+    public void save(Transaction transaction){
+        transactionRepository.save(transaction);
+    }
+
+    public void deleteById(Long id){
+        transactionRepository.deleteById(id);
+    }
 
 }

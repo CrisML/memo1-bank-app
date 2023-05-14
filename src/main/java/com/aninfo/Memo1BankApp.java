@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.aninfo.model.Transaction;
+import com.aninfo.service.TransactionService;
+
 import java.util.Collection;
 import java.util.Optional;
 import springfox.documentation.builders.PathSelectors;
@@ -17,6 +20,8 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -26,6 +31,9 @@ public class Memo1BankApp {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private TransactionService transactionService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Memo1BankApp.class, args);
@@ -65,6 +73,7 @@ public class Memo1BankApp {
 		accountService.deleteById(cbu);
 	}
 
+	/*
 	@PutMapping("/accounts/{cbu}/withdraw")
 	public Account withdraw(@PathVariable Long cbu, @RequestParam Double sum) {
 		return accountService.withdraw(cbu, sum);
@@ -73,6 +82,35 @@ public class Memo1BankApp {
 	@PutMapping("/accounts/{cbu}/deposit")
 	public Account deposit(@PathVariable Long cbu, @RequestParam Double sum) {
 		return accountService.deposit(cbu, sum);
+	}
+
+	 */
+
+	@PostMapping("/transactions")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Transaction createTransaction(@RequestBody Transaction transaction){
+		return this.transactionService.createTransaction(transaction);
+	}
+
+	@GetMapping("/transactions")
+	public Collection<Transaction> getTransactions(){
+		return transactionService.getTransactions();
+	}
+
+	@GetMapping("/transactions/{cbu}")
+	public Collection<Transaction> getTransactionByCbu(@PathVariable Long cbu){
+		return transactionService.getTransactionsByCbu(cbu);
+	}
+
+	@GetMapping("/transactions/{id}")
+	public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id){
+		Optional<Transaction> transactionOptional = transactionService.findById(id);
+		return ResponseEntity.of(transactionOptional);
+	}
+
+	@DeleteMapping("/transactions/{id}")
+	public void deleteTransaction(@PathVariable Long id) {
+		transactionService.deleteById(id);
 	}
 
 	@Bean

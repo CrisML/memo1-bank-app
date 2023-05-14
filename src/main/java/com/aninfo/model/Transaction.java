@@ -7,18 +7,17 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
-    private Long id;
+    private Long transId;
     private Long cbu;
     private Double amount;
     private String category;
 
     public void setId(Long id){
-        this.id = id;
+        this.transId = id;
     }
 
     public Long getId(){
-        return this.id;
+        return this.transId;
     }
 
     public void setCategory(String type){
